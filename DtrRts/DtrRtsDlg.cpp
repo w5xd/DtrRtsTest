@@ -206,7 +206,7 @@ void CDtrRtsDlg::OnCbnSelchangeCommcombo()
         dcb.BaudRate = 45;
         dcb.ByteSize = 5;
         dcb.Parity = NOPARITY;
-        dcb.StopBits = TWOSTOPBITS;		//KLUDGE NT WILL NOT ACCEPT THIS
+        dcb.StopBits = ONE5STOPBITS;		
         dcb.fBinary = 1;
         dcb.fParity = 0;
         dcb.fOutxCtsFlow = 0;
@@ -216,13 +216,7 @@ void CDtrRtsDlg::OnCbnSelchangeCommcombo()
         dcb.fOutX = 0;
         dcb.fInX = 0;
         dcb.fNull = 0;
-
-        bool ret = SetCommState(m_CommChannel, &dcb) != 0;
-        if (!ret)
-        {
-            dcb.StopBits = ONE5STOPBITS;	//NT takes this path. WIN98 sends 1/2 if you set 2!!!
-            ret = SetCommState(m_CommChannel, &dcb) != 0;
-        }
+        SetCommState(m_CommChannel, &dcb);
         EscapeCommFunction(m_CommChannel, CLRDTR);
         EscapeCommFunction(m_CommChannel, CLRRTS);
         GetDlgItem(IDC_STATUS)->SetWindowText(L"DTR and RTS initialized CLEARED");
